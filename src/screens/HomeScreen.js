@@ -9,7 +9,7 @@ import RSSReader from '../components/RSSReader';
 const HomeScreen = () => {
     const [ rssFeed, setRssFeed ] = useState(null)
     const getArticles = async () => {
-        await fetch('https://www.thetravelrunner.com/feed')
+        await fetch('https://www.thetravelrunner.com/feed/')
             .then((response) => response.text())
             .then((responseData) => rssParser.parse(responseData))
             .then((rss) => {
