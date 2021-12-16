@@ -1,39 +1,63 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, useWindowDimensions } from 'react-native'
 import tailwind from 'tailwind-rn'
-import HTMLView from 'react-native-htmlview';
+import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
 
 //Components
 import TopBar from '../components/TopBar';
+import AudioPlayer from '../components/AudioPlayer';
+
+//System Fonts HTML Render
+const systemFonts = [...defaultSystemFonts ]
 
 const ReadPostScreen = ({ route }) => {
     const { postInfo } = route.params
-    const [ content, setContent ] = useState(postInfo.content)
+    const [ content, setContent ] = useState({
+        html: postInfo.content
+    })
     const [ categories, setCategories ] = useState([])
     const [ author, setAuthor ] = useState(postInfo.authors[0].name)
+    const [ audioURL, setAudioURL ] = useState(null)
 
     const getCategoriesList = () => {
         const categoriesList = []
         postInfo.categories.forEach(item => {
-            console.log(typeof item.name)
             categoriesList.push(item.name)
         })
         setCategories(categoriesList)
     }
 
+    const getAudioURL = () => {
+        const beginning = content.html.search('src')
+        const beginningText = content.html.slice(beginning, 250)
+        const beginningURLIndex = beginningText.search(`"`)
+        const endingURLIndex = beginningText.search('>')
+        const URL = beginningText.slice(beginningURLIndex + 1, endingURLIndex - 1)
+        setAudioURL(URL)
+    }
+
     useEffect(() => {
+        getAudioURL()
         getCategoriesList()
-    }, [ postInfo ])
+    }, [])
+
+    const { width } = useWindowDimensions();
+
+    console.log(audioURL, "AUDIO")
 
     return (
         <SafeAreaView style={ tailwind(`flex-1`) }>
             <TopBar title={ postInfo.title } author={ author } categories={ categories }/>
             <ScrollView>
-               <HTMLView 
-                    value={ content }
-                    stylesheet={ htmlStyles }
-                    addLineBreaks={ false }
-               />
+                <View style={ tailwind(`px-5`) }>
+                    <AudioPlayer source={ audioURL }/>
+                    <RenderHtml
+                        source={ content }
+                        contentWidth={ width }
+                        enableExperimentalMarginCollapsing={true}
+                        systemFonts={ systemFonts }
+                    />
+                </View>
             </ScrollView>
         </SafeAreaView>
     )
@@ -42,30 +66,3 @@ const ReadPostScreen = ({ route }) => {
 export default ReadPostScreen
 
 const styles = StyleSheet.create({})
-const fontSize = 16
-const htmlStyles = StyleSheet.create({
-    a: {
-        fontWeight: '300',
-        fontSize: fontSize,
-        color: 'blue',
-        fontStyle: 'italic'
-    },
-    p: {
-        fontSize: fontSize,
-        paddingHorizontal: 5
-    },
-    strong: {
-        fontWeight: 'bold',
-        fontSize: fontSize
-    },
-    li: {
-        fontSize: fontSize
-    },
-    h2: {
-        fontWeight: 'bold',
-        fontSize: 18
-    },
-    div: {
-        margin: 0
-    }
-})

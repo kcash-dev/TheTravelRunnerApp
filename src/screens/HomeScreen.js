@@ -5,6 +5,7 @@ import * as rssParser from 'react-native-rss-parser';
 //Components
 import TopBar from '../components/TopBar'
 import RSSReader from '../components/RSSReader';
+import tailwind from 'tailwind-rn';
 
 const HomeScreen = () => {
     const [ rssFeed, setRssFeed ] = useState(null)
@@ -13,8 +14,7 @@ const HomeScreen = () => {
             .then((response) => response.text())
             .then((responseData) => rssParser.parse(responseData))
             .then((rss) => {
-                setRssFeed(rss), 
-                console.log(rss)
+                setRssFeed(rss)
             })
             .catch(err => console.err(err))
     }
