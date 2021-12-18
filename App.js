@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 //Navs
 import HomeNav from './src/navs/HomeNav';
@@ -19,19 +20,19 @@ export default function App() {
             let iconName;
 
             if (route.name === 'Home') {
-              iconName = 'home'
+              iconName = 'feed'
             } else if (route.name === 'Settings') {
               iconName = focused ? 'ios-list-box' : 'ios-list';
             }
 
             // You can return any component that you like here!
-            return <AntDesign name={iconName} size={size} color={color} />;
+            return <FontAwesome name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
         })}
       >
-        <Tab.Screen name="Home" component={ HomeNav } options={{ headerShown: false }}/>
+        <Tab.Screen name="Home" component={ HomeNav } options={{ title: 'Feed', headerShown: false }}/>
       </Tab.Navigator>
     </NavigationContainer>
   );
