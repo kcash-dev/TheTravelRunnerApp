@@ -8,6 +8,7 @@ import CategoryView from './CategoryView'
 
 const RSSReader = ({ rssFeed }) => {
     const [ rssData, setRssData ] = useState()
+    
     function setData() {
         if(rssFeed) {
             setRssData(rssFeed.items)
@@ -21,41 +22,65 @@ const RSSReader = ({ rssFeed }) => {
     }, [ rssFeed ])
 
     const renderFeed = ({ item }) => {
-        const fixedDescription = item.description.replace(/<[^>]*>?/gm, '')
-        const finalDescription = fixedDescription.replace(/&#8217;/g, `'`).slice(0, 200) + '...'
-        const finalDatePublished = item.published.slice(0, 16)
-        const categories = item.categories
-        const category = categories.filter(item => {
-            const catName = item.name.toLowerCase()
-            return catName === 'travel' || 
-            catName === 'running'
-        })
-        const subCategory = categories.filter(item => {
-            const catName = item.name.toLowerCase()
-            return catName === 'trail running' || 
-            catName === 'opinion' || 
-            catName === 'places to visit' ||
-            catName === 'tips'
-        })
+        console.log(item.image, "ITEM IMAGE")
+        const title = item.title;
+        const author = item.authors[0].name
+        let description;
+        let publishDate;
+        let primaryCategory;
+        let secondaryCategory;
+        let audioURL;
+        
+        fixDescriptionAndGetDetails(item)
 
-        console.log(categories)
+        function fixDescriptionAndGetDetails(item) {
+            const fixedDescription = item.description.replace(/<[^>]*>?/gm, '')
+            description = fixedDescription.replace(/&#8217;/g, `'`).slice(0, 200) + '...'
+            publishDate = item.published.slice(0, 16)
+            const categories = item.categories
+            primaryCategory = categories.filter(item => {
+                const catName = item.name.toLowerCase()
+                return catName === 'travel' || 
+                catName === 'running'
+            })
+            secondaryCategory = categories.filter(item => {
+                const catName = item.name.toLowerCase()
+                return catName === 'trail running' || 
+                catName === 'opinion' || 
+                catName === 'places to visit' ||
+                catName === 'tips'
+            })
+            getAudio()
+        }
+
+        function getAudio() {
+            const beginning = item.content.search('<audio controls src')
+            const beginningText = item.content.slice(beginning, 250)
+            const beginningURLIndex = beginningText.search(`"`)
+            const endingURLIndex = beginningText.search('>')
+            const URL = beginningText.slice(beginningURLIndex + 1, endingURLIndex - 1)
+            audioURL = URL
+        }
 
         return (
             <View 
                 style={ tailwind(`h-96 w-full justify-center border`) }
             >
                 <View>
-                    <CategoryView category={ category } subCategory={ subCategory }/>
+                    <CategoryView 
+                        category={ primaryCategory } 
+                        subCategory={ secondaryCategory }
+                    />
                 </View>
                 <Image 
                     source={ item.image }
                     style={ tailwind(`h-20 w-20`) }
                 />
                 <View style={ tailwind(`px-3`) }>
-                    <Text style={ tailwind(`font-bold text-lg`) }>{ item.title }</Text>
-                    <Text style={ tailwind(`italic`) }>{ finalDatePublished }</Text>
-                    <Text style={ tailwind(`italic py-3`) }>{ item.authors[0].name }</Text>
-                    <Text>{ finalDescription }</Text>
+                    <Text style={ tailwind(`font-bold text-lg`) }>{ title }</Text>
+                    <Text style={ tailwind(`italic`) }>{ publishDate }</Text>
+                    <Text style={ tailwind(`italic py-3`) }>{ author }</Text>
+                    <Text>{ description }</Text>
                     <Pressable
                         style={({ pressed }) => [{
                             opacity: pressed ? 0.5 : 1
@@ -63,7 +88,7 @@ const RSSReader = ({ rssFeed }) => {
                         tailwind(`w-20 border h-8 bg-green-900 justify-center items-center rounded-lg mt-5`),
                         styles.shadow
                         ]}
-                        onPress={ () => navigation.navigate('ReadPost', { postInfo: item }) }
+                        onPress={ () => navigation.navigate('ReadPost', { postInfo: item, audioURL: audioURL }) }
                     >
                         <Text style={ tailwind(`text-white`) }>Read More</Text>
                     </Pressable>
@@ -74,11 +99,21 @@ const RSSReader = ({ rssFeed }) => {
 
     return (
         <View>
-            <FlatList 
-                data={ rssData }
-                renderItem={renderFeed}
-                keyExtractor={item => item.title}
-            />
+           { rssData ?
+                <FlatList 
+                    data={ rssData }
+                    renderItem={renderFeed}
+                    keyExtractor={item => item.title}
+                />
+                :
+                <View style={ tailwind(`h-full items-center justify-center self-center`) }>
+                    <Image 
+                        source={{ uri: 'https://i.imgur.com/1dDg289.png' }}
+                        style={ tailwind(`h-16 w-16`) }
+                    />
+                    <Text>Loading...</Text>
+                </View>
+            }
         </View>
     )
 }

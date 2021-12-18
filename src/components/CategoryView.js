@@ -7,39 +7,39 @@ const CategoryView = ({ category, subCategory }) => {
     const [ subColor, setSubColor ] = useState('')
     const [ categoryName, setCategoryName ] = useState(category[0].name.toLowerCase())
     const [ subCategoryName, setSubCategoryName ] = useState(subCategory[0].name.toLowerCase())
-    function changeCategoryColor() {
-        if(categoryName === 'running') {
-            setColor('green')
-        } else if (categoryName === 'travel') {
-            setColor('red')
+    function changeCategoryColor(name) {
+        if(name === 'running') {
+            setColor('bg-green-500')
+        } else if (name === 'travel') {
+            setColor('bg-red-500')
         } else {
-            setColor('blue')
+            setColor('bg-blue-500')
         }
     }
 
-    function changeSubCategoryColor() {
-        if(subCategoryName === 'trail running') {
-            setSubColor('blue')
-        } else if (subCategoryName === 'opinion') {
-            setSubColor('yellow')
-        } else if (subCategoryName === 'places to visit') {
-            setSubColor('purple')
+    function changeSubCategoryColor(name) {
+        if(name === 'trail running') {
+            setSubColor('bg-blue-500')
+        } else if (name === 'opinion') {
+            setSubColor('bg-yellow-500')
+        } else if (name === 'places to visit') {
+            setSubColor('bg-purple-500')
         } else {
-            setSubColor('indigo')
+            setSubColor('bg-indigo-500')
         }
     }
 
     useEffect(() => {
-        changeCategoryColor()
-        changeSubCategoryColor()
+        changeCategoryColor(categoryName)
+        changeSubCategoryColor(subCategoryName)
     }, [ category ])
 
     return (
         <View style={ tailwind(`flex-row items-center absolute left-3 top-2`) }>
-            <View style={[ tailwind(`w-16 h-12 items-center justify-center rounded-lg bg-${color}-500 opacity-80 mr-3`), styles.shadow ]}>
+            <View style={[ tailwind(`w-16 h-12 items-center justify-center rounded-lg ${color} opacity-80 mr-3`), styles.shadow ]}>
                 <Text style={ tailwind(`text-white font-bold text-center`) }>{ categoryName }</Text>
             </View>
-            <View style={[ tailwind(`w-16 h-12 items-center justify-center rounded-lg bg-${subColor}-500 opacity-80`), styles.shadow ]}>
+            <View style={[ tailwind(`w-16 h-12 items-center justify-center rounded-lg ${subColor} opacity-80`), styles.shadow ]}>
                 <Text style={ tailwind(`text-white font-bold text-center`) }>{ subCategoryName }</Text>
             </View>
         </View>
