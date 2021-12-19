@@ -64,22 +64,28 @@ const RSSReader = ({ rssFeed }) => {
 
         return (
             <View 
-                style={ tailwind(`h-96 w-full justify-center border`) }
+                style={ tailwind(`w-full justify-center border`) }
             >
-                <View>
+                <View style={ tailwind(`my-3`) }>
                     <CategoryView 
                         category={ primaryCategory } 
                         subCategory={ secondaryCategory }
                     />
                 </View>
-                <Image 
-                    source={ item.image }
-                    style={ tailwind(`h-20 w-20`) }
-                />
-                <View style={ tailwind(`px-3`) }>
-                    <Text style={ tailwind(`font-bold text-lg`) }>{ title }</Text>
-                    <Text style={ tailwind(`italic`) }>{ publishDate }</Text>
-                    <Text style={ tailwind(`italic py-3`) }>{ author }</Text>
+                <View style={ tailwind(`pl-3 py-14`) }>
+                    <View style={ tailwind(`flex-row`) }>
+                        <View style={ tailwind(`w-2/5`) }>
+                            <Text style={ tailwind(`font-bold text-lg`) }>{ title }</Text>
+                            <Text style={ tailwind(`italic`) }>{ publishDate }</Text>
+                            <Text style={ tailwind(`italic py-1`) }>{ author }</Text>
+                        </View>
+                        <View style={ tailwind(`w-3/5 ml-5`) }>
+                            <Image 
+                                source={{ uri: 'https://i.imgur.com/15cUHCo.jpg' }}
+                                style={ tailwind(`h-40 w-40 rounded-lg`) }
+                            />
+                        </View>
+                    </View>
                     <Text>{ description }</Text>
                     <Pressable
                         style={({ pressed }) => [{

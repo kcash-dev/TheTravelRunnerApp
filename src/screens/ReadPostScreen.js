@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, StyleSheet, Text, View, SafeAreaView, ScrollView, useWindowDimensions } from 'react-native'
+import { Animated, StyleSheet, Text, View, SafeAreaView, ScrollView, useWindowDimensions, ImageBackground } from 'react-native'
 import tailwind from 'tailwind-rn'
 import RenderHtml, { defaultSystemFonts } from 'react-native-render-html';
 
@@ -28,7 +28,8 @@ const ReadPostScreen = ({ route }) => {
         postInfo.categories.forEach(item => {
             categoriesList.push(item.name)
         })
-        setCategories(categoriesList)
+        const finalCategoriesList = categoriesList.join(', ')
+        setCategories(finalCategoriesList)
     }
 
     const getAudioURL = () => {
@@ -55,9 +56,20 @@ const ReadPostScreen = ({ route }) => {
     }, [])
 
     const { width } = useWindowDimensions();
-    const nodeList = [ 'audio' ]
+    const nodeList = [ 'audio', 'meta' ]
     const HEADER_EXPANDED_HEIGHT = 300
-    const HEADER_COLLAPSED_HEIGHT = 60
+    const HEADER_COLLAPSED_HEIGHT = 80
+    const headerTitleOpacity = state.scrollY.interpolate({
+        inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
+        outputRange: [0, 1],
+        extrapolate: 'clamp'
+    })
+
+    const heroTitleOpacity = state.scrollY.interpolate({
+        inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
+        outputRange: [1, 0],
+        extrapolate: 'clamp'
+    })
 
     const headerHeight = state.scrollY.interpolate({
         inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
@@ -66,8 +78,21 @@ const ReadPostScreen = ({ route }) => {
     })
 
     return (
-        <SafeAreaView style={ tailwind(`flex-1`) }>
-            <Animated.View style={{ height: headerHeight }}/>
+        <View style={ tailwind(`flex-1`) }>
+            <Animated.View style={[ tailwind(`rounded-lg`), { height: headerHeight, width: width }, styles.shadow ]}>
+                <ImageBackground
+                    source={{ uri: 'https://i.imgur.com/15cUHCo.jpg' }}
+                    style={{ width: width, height: '100%' }}
+                    resizeMode="cover"
+                >
+                    <View style={ tailwind(`flex-1 bg-black bg-opacity-60`) }>
+                        <Animated.Text style={[ tailwind(`mt-7 text-center font-bold text-white text-opacity-100`), { opacity: headerTitleOpacity } ]}>{ postInfo.title }</Animated.Text>
+                        <Animated.Text style={[ tailwind(`absolute bottom-24 mb-2 px-2 text-xl font-bold text-center text-white text-opacity-100`), { opacity: heroTitleOpacity} ]}>{ postInfo.title }</Animated.Text>
+                        <Animated.Text style={[ tailwind(`absolute bottom-20 px-2 text-center text-white`), { opacity: heroTitleOpacity} ]}>By: { author }</Animated.Text>
+                        <Animated.Text style={[ tailwind(`absolute bottom-4 px-2 text-white italic`), { opacity: heroTitleOpacity} ]}>{ categories }</Animated.Text>
+                    </View>
+                </ImageBackground>
+            </Animated.View>
                 {/* <TopBar title={ postInfo.title } author={ author } categories={ categories }/> */}
                 <ScrollView 
                     style={ tailwind(`bg-green-900`) }
@@ -79,7 +104,8 @@ const ReadPostScreen = ({ route }) => {
                                y: state.scrollY
                              }
                            }
-                        }]
+                        }],
+                        { useNativeDriver: false }
                     )}
                       scrollEventThrottle={16}
                 >
@@ -99,7 +125,7 @@ const ReadPostScreen = ({ route }) => {
                         />
                     </View>
                 </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 
