@@ -150,7 +150,7 @@ const RSSReader = ({ rssFeed }) => {
                         <Animated.Text style={[ tailwind(`absolute bottom-20 mb-2 text-4xl font-bold text-white text-opacity-90 italic`), { opacity: heroTitleOpacity} ]}>The Travel Runner</Animated.Text>
                         <Animated.Text style={[ tailwind(`absolute bottom-16 px-2 text-center text-white text-opacity-90`), { opacity: heroTitleOpacity} ]}>Where Travel and Trail Running Collide</Animated.Text>
                         <Animated.Image 
-                            style={[ tailwind(`absolute rounded-lg top-2 left-2 h-20 w-20`), { opacity: heroTitleOpacity} ]}
+                            style={[ tailwind(`absolute rounded-lg top-6 left-2 h-20 w-20`), { opacity: heroTitleOpacity} ]}
                             source={{ uri: 'https://i.imgur.com/smHitpL.png' }}
                         />
                     </View>
@@ -170,7 +170,7 @@ const RSSReader = ({ rssFeed }) => {
                         }],
                         { useNativeDriver: false }
                     )}
-                      scrollEventThrottle={16}
+                    scrollEventThrottle={16}
                 />
                 :
                 <View style={ tailwind(`h-full items-center justify-center self-center`) }>
