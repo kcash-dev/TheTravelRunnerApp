@@ -3,11 +3,12 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 //Navs
 import HomeNav from './src/navs/HomeNav';
+import RoutesNav from './src/navs/RoutesNav';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,8 +22,8 @@ export default function App() {
 
             if (route.name === 'Home') {
               iconName = 'feed'
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'ios-list-box' : 'ios-list';
+            } else if (route.name === 'Routes') {
+              iconName = 'map-signs'
             }
 
             // You can return any component that you like here!
@@ -32,7 +33,8 @@ export default function App() {
           tabBarInactiveTintColor: 'gray',
         })}
       >
-        <Tab.Screen name="Home" component={ HomeNav } options={{ title: 'Feed', headerShown: false }}/>
+        <Tab.Screen name="Home" component={ HomeNav } options={{ title: 'Blog Feed', headerShown: false }}/>
+        <Tab.Screen name="Routes" component={ RoutesNav } options={{ title: 'Routes', headerShown: false }}/>
       </Tab.Navigator>
     </NavigationContainer>
   );

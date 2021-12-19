@@ -86,14 +86,13 @@ const ReadPostScreen = ({ route }) => {
                     resizeMode="cover"
                 >
                     <View style={ tailwind(`flex-1 bg-black bg-opacity-60`) }>
-                        <Animated.Text style={[ tailwind(`mt-7 text-center font-bold text-white text-opacity-100`), { opacity: headerTitleOpacity } ]}>{ postInfo.title }</Animated.Text>
-                        <Animated.Text style={[ tailwind(`absolute bottom-24 mb-2 px-2 text-xl font-bold text-center text-white text-opacity-100`), { opacity: heroTitleOpacity} ]}>{ postInfo.title }</Animated.Text>
-                        <Animated.Text style={[ tailwind(`absolute bottom-20 px-2 text-center text-white`), { opacity: heroTitleOpacity} ]}>By: { author }</Animated.Text>
-                        <Animated.Text style={[ tailwind(`absolute bottom-4 px-2 text-white italic`), { opacity: heroTitleOpacity} ]}>{ categories }</Animated.Text>
+                        <Animated.Text style={[ tailwind(`mt-7 text-center font-bold text-white text-opacity-100 italic`), { opacity: headerTitleOpacity } ]}>{ postInfo.title }</Animated.Text>
+                        <Animated.Text style={[ tailwind(`absolute bottom-24 mb-2 px-2 text-xl font-bold text-white text-opacity-90 italic`), { opacity: heroTitleOpacity} ]}>{ postInfo.title }</Animated.Text>
+                        <Animated.Text style={[ tailwind(`absolute bottom-20 px-2 text-center text-white text-opacity-90`), { opacity: heroTitleOpacity} ]}>By: { author }</Animated.Text>
+                        <Animated.Text style={[ tailwind(`absolute bottom-4 px-2 text-white italic text-opacity-90`), { opacity: heroTitleOpacity} ]}>{ categories }</Animated.Text>
                     </View>
                 </ImageBackground>
             </Animated.View>
-                {/* <TopBar title={ postInfo.title } author={ author } categories={ categories }/> */}
                 <ScrollView 
                     style={ tailwind(`bg-green-900`) }
                     contentContainerStyle={ tailwind(`items-center`) }
@@ -117,7 +116,7 @@ const ReadPostScreen = ({ route }) => {
                         }
                         <RenderHtml
                             source={ content }
-                            contentWidth={ width }
+                            contentWidth={ width - 20 }
                             enableExperimentalMarginCollapsing={ true }
                             systemFonts={ systemFonts }
                             tagsStyles={ tagsStyles }
@@ -150,6 +149,6 @@ const styles = StyleSheet.create({
 
 const tagsStyles = {
     img: {
-        
+
     }
 }
