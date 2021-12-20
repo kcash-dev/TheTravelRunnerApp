@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
-import { Animated, ImageBackground, StyleSheet, View,  useWindowDimensions, FlatList, Text, Pressable } from 'react-native'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
 import tailwind from 'tailwind-rn'
-import { useNavigation } from '@react-navigation/native'
+
+//Components
+import Header from '../components/Header'
 
 const DATA = {
+    image: 'https://i.imgur.com/mWXzax7.jpg',
     countries: [
         {
             name: 'USA',
@@ -18,10 +21,15 @@ const DATA = {
                             cityState: 'Annapolis, Maryland',
                             routes: [
                                 {
+                                    name: 'Rusty Cars',
                                     distance: '14.5',
-                                    elevation: '',
+                                    elevation: '386',
                                     gpxUrl: 'https://drive.google.com/file/d/1gjOQuqtd_xuktTRwOqvp2Yn428hjsfT2/view?usp=sharing',
-                                    image: 'https://i.imgur.com/1gWORG2.png'
+                                    image: 'https://i.imgur.com/1gWORG2.png',
+                                    origin: {
+                                        latitude: 39.00686420166008,
+                                        longitude: -76.60936078433107,
+                                    },
                                 }
                             ]
                         }
@@ -37,7 +45,17 @@ const DATA = {
                             image: 'https://i.imgur.com/8jFou5f.jpg',
                             cityState: 'Belmont, Ohio',
                             routes: [
-
+                                {
+                                    name: 'Bark Camp',
+                                    distance: '21',
+                                    elevation: '390',
+                                    gpxUrl: '',
+                                    image: 'https://i.imgur.com/1gWORG2.png',
+                                    origin: {
+                                        latitude: 40.04846426455281,
+                                        longitude: -81.02846704999774,
+                                    },
+                                }
                             ]
                         }
                     ]
@@ -150,87 +168,9 @@ const DATA = {
 }
 
 const RoutesListScreen = () => {
-    const [ state, setState ] = useState({
-        scrollY: new Animated.Value(0)
-    })
-
-    const navigation = useNavigation();
-
-    const { width } = useWindowDimensions();
-    const HEADER_EXPANDED_HEIGHT = 250
-    const HEADER_COLLAPSED_HEIGHT = 80
-    const headerTitleOpacity = state.scrollY.interpolate({
-        inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
-        outputRange: [0, 1],
-        extrapolate: 'clamp'
-    })
-
-    const heroTitleOpacity = state.scrollY.interpolate({
-        inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
-        outputRange: [1, 0],
-        extrapolate: 'clamp'
-    })
-
-    const headerHeight = state.scrollY.interpolate({
-        inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-        outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
-        extrapolate: 'clamp'
-    })
-
-    const renderItem = ({ item }) => (
-        <Pressable
-            style={({ pressed }) => [{
-                opacity: pressed ? 0.5 : 1
-            },
-            tailwind(`w-full items-center justify-center h-36 pb-1`)
-            ]}
-            onPress={() => navigation.navigate('CountryRoutes', { data: item })}
-        >
-            <ImageBackground
-                source={{ uri: item.image }}
-                style={ tailwind(`w-full h-full justify-center items-center`) }
-                resizeMode='cover'
-            >
-                <Text style={ tailwind(`bg-black text-white w-2/3 text-center text-xl font-bold bg-opacity-60`) }>{ item.name }</Text>
-            </ImageBackground>
-        </Pressable>
-    )
-
     return (
-        <View>
-            <Animated.View style={[ tailwind(`rounded-lg`), { height: headerHeight, width: width }, styles.shadow ]}>
-                <ImageBackground
-                    source={{ uri: 'https://i.imgur.com/4P4sInU.jpg' }}
-                    style={{ width: width, height: '100%' }}
-                    resizeMode="cover"
-                >
-                    <View style={ tailwind(`flex-1 bg-black bg-opacity-40 items-center w-full`) }>
-                        <View style={ tailwind(`flex-row justify-evenly items-center`) }>
-                            <View>
-                                <Animated.Text style={[ tailwind(`mt-5 px-10 text-center font-bold text-white text-opacity-100 italic text-2xl`), { opacity: headerTitleOpacity } ]}>Routes</Animated.Text>
-                                <Animated.Text style={[ tailwind(`text-center text-white text-opacity-90 text-xs`), { opacity: headerTitleOpacity} ]}>In need of a trail? I have something for you.</Animated.Text>
-                            </View>
-                        </View>
-                        <Animated.Text style={[ tailwind(`absolute bottom-20 mb-2 text-4xl font-bold text-white text-opacity-90 italic`), { opacity: heroTitleOpacity} ]}>Routes</Animated.Text>
-                        <Animated.Text style={[ tailwind(`absolute bottom-16 px-2 text-center text-white text-opacity-90`), { opacity: heroTitleOpacity} ]}>In need of a trail? I have something for you.</Animated.Text>
-                    </View>
-                </ImageBackground>
-            </Animated.View>
-            <FlatList
-                data={ DATA.countries }
-                renderItem={ renderItem }
-                keyExtractor={item => item.name }
-                onScroll={Animated.event(
-                    [{ nativeEvent: {
-                        contentOffset: {
-                        y: state.scrollY
-                        }
-                    }
-                    }],
-                    { useNativeDriver: false }
-                )}
-                scrollEventThrottle={16}
-            />
+        <View style={ tailwind(`flex-1`) }>
+            <Header screenName={'Routes'} subtitle={ 'In need of a trail? I have something for you.' } image={ DATA.image } data={ DATA.countries } routeName={ 'CountryRoutes' }/>
         </View>
     )
 }

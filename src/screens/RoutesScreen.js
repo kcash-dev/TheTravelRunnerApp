@@ -1,111 +1,16 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, Animated, useWindowDimensions, ImageBackground, FlatList, Pressable } from 'react-native'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
 import tailwind from 'tailwind-rn';
-import { useNavigation } from '@react-navigation/native'
+
+//Components
+import Header from '../components/Header';
 
 const RoutesScreen = ({ route }) => {
     const { data } = route.params;
-    const [ state, setState ] = useState({
-        scrollY: new Animated.Value(0)
-    })
-
-    console.log(data)
-
-    const navigation = useNavigation();
-
-    const { width } = useWindowDimensions();
-    const HEADER_EXPANDED_HEIGHT = 250
-    const HEADER_COLLAPSED_HEIGHT = 80
-    const headerTitleOpacity = state.scrollY.interpolate({
-        inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
-        outputRange: [0, 1],
-        extrapolate: 'clamp'
-    })
-
-    const heroTitleOpacity = state.scrollY.interpolate({
-        inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
-        outputRange: [1, 0],
-        extrapolate: 'clamp'
-    })
-
-    const headerHeight = state.scrollY.interpolate({
-        inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-        outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
-        extrapolate: 'clamp'
-    })
-
-    const renderItem = ({ item }) => (
-        <Pressable
-            style={({ pressed }) => [{
-                opacity: pressed ? 0.5 : 1
-            },
-            tailwind(`w-full items-center justify-center h-36 pb-1`)
-            ]}
-            onPress={() => navigation.navigate('RouteDetails', { data: item })}
-        >
-            <ImageBackground
-                source={{ uri: item.image }}
-                style={ tailwind(`w-full h-full justify-center items-center`) }
-                resizeMode='cover'
-            >
-                <Text style={ tailwind(`bg-black text-white w-2/3 text-center text-xl font-bold bg-opacity-60`) }>{ item.distance } kilometers</Text>
-            </ImageBackground>
-        </Pressable>
-    )
 
     return (
-        <View>
-            <Animated.View style={[ tailwind(`rounded-lg`), { height: headerHeight, width: width }, styles.shadow ]}>
-                <ImageBackground
-                    source={{ uri: data.image }}
-                    style={{ width: width, height: '100%' }}
-                    resizeMode="cover"
-                >
-                    <View style={ tailwind(`flex-1 bg-black bg-opacity-40 items-center w-full`) }>
-                        <View style={ tailwind(`justify-evenly items-center`) }>
-                            <View>
-                                <Animated.Text style={[ tailwind(`mt-5 px-10 text-center font-bold text-white text-opacity-100 italic text-2xl text-center`), { opacity: headerTitleOpacity } ]}>{ data.name }</Animated.Text>
-                                <Animated.Text style={[ tailwind(`text-center text-white text-opacity-90 text-xs`), { opacity: headerTitleOpacity} ]}>{ data.cityState }</Animated.Text>
-                            </View>
-                        </View>
-                        <Animated.Text style={[ tailwind(`absolute bottom-20 mb-2 text-4xl font-bold text-white text-opacity-90 italic text-center`), { opacity: heroTitleOpacity} ]}>{ data.name }</Animated.Text>
-                        <Animated.Text style={[ tailwind(`absolute bottom-16 px-2 text-center text-white text-opacity-90`), { opacity: heroTitleOpacity} ]}>{ data.cityState }</Animated.Text>
-                    </View>
-                </ImageBackground>
-            </Animated.View>
-            <View>
-                <Pressable
-                    style={({ pressed }) => [{
-                        opacity: pressed ? 0.5 : 1
-                    },
-                    tailwind(`w-full h-10 justify-center items-center bg-green-900`)
-                    ]}
-                    onPress={() => navigation.pop()}
-                >
-                    <Text style={ tailwind(`text-white font-bold`) }>Go Back</Text>
-                </Pressable>
-                { data.routes.length > 0 ? 
-                    <FlatList 
-                        data={ data.routes }
-                        renderItem={ renderItem }
-                        keyExtractor={item => item.distance}
-                        onScroll={Animated.event(
-                            [{ nativeEvent: {
-                                contentOffset: {
-                                y: state.scrollY
-                                }
-                            }
-                            }],
-                            { useNativeDriver: false }
-                        )}
-                        scrollEventThrottle={16}
-                    />
-                    :
-                    <View style={ tailwind(`items-center justify-center`) }>
-                        <Text style={ tailwind(`text-lg`) }>There are no routes available yet!</Text>
-                    </View>
-                }
-            </View>
+        <View style={ tailwind(`flex-1`) }>
+            <Header screen={ data.name } image={ data.image } data={ data.routes } routeName={ 'RouteDetails' } backButton={ true } />
         </View>
     )
 }

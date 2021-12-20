@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Animated, useWindowDimensions, ImageBackground } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import * as rssParser from 'react-native-rss-parser';
 
 //Components
-import TopBar from '../components/TopBar'
 import RSSReader from '../components/RSSReader';
 import tailwind from 'tailwind-rn';
 
