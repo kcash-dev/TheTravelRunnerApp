@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView, Image, Pressable, Linking } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View, ScrollView, Image, Pressable, Linking } from 'react-native'
 import Maps from '../components/Maps';
 import tailwind from 'tailwind-rn';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -21,7 +21,7 @@ const RouteDetailsScreen = ({ route }) => {
         const newJson = []
         json.forEach(item => {
             if(item.length === 3) {
-                const newItem = item.splice(0, 1)
+                const newItem = item.slice(0, 2)
                 newJson.push({
                     latitude: newItem[1],
                     longitude: newItem[0]
@@ -36,7 +36,6 @@ const RouteDetailsScreen = ({ route }) => {
         setJsonData(newJson)
     }
 
-    console.log(data.jsonData[0].features[0].geometry.coordinates[0], 'TO BE JSON')
     useEffect(() => {
         checkJson(data.jsonData[0].features[0].geometry.coordinates[0])
     }, [])
@@ -46,11 +45,14 @@ const RouteDetailsScreen = ({ route }) => {
     return (
         <View style={ tailwind(`flex-1 bg-white`) }>
             <OwnStatusBar backgroundColor="#003b36" />
-            <View style={ tailwind(`h-1/2`) }>
+            <View style={ tailwind(`h-1/2 justify-center`) }>
                 { jsonData ?
                     <Maps origin={ data.origin } update={ forceUpdate } json={ jsonData } data={ data }/>
                     :
-                    null
+                    <View style={ tailwind(`flex-1 items-center justify-center`) }>
+                        <ActivityIndicator size="large" />
+                        <Text>Loading map</Text>
+                    </View>
                 }
             </View>
             <View style={ tailwind(`h-1/2`) }>

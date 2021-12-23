@@ -32,7 +32,21 @@ const RSSReader = ({ rssFeed }) => {
         let primaryCategory;
         let secondaryCategory;
         let audioURL;
-        
+        let coverImageURL;
+        let postContent = {
+            title: item.title,
+            links: item.links,
+            descriptions: item.description,
+            id: item.id,
+            published: item.published,
+            enclosures: item.enclosures,
+            itunes: item.itunes,
+            authors: item.authors,
+            categories: item.categories,
+            content: ''
+        }
+
+        fixContent()
         fixDescriptionAndGetDetails(item)
 
         function fixDescriptionAndGetDetails(item) {
@@ -53,6 +67,14 @@ const RSSReader = ({ rssFeed }) => {
                 catName === 'tips'
             })
             getAudio()
+            getCoverImage()
+        }
+
+        function fixContent() {
+            const slicedSection = item.content.slice(0, 300)
+            const endingIndex = slicedSection.search('/>')
+            const fixedContent = item.content.slice(endingIndex + 2)
+            postContent.content = fixedContent
         }
 
         function getAudio() {
@@ -62,6 +84,14 @@ const RSSReader = ({ rssFeed }) => {
             const endingURLIndex = beginningText.search('>')
             const URL = beginningText.slice(beginningURLIndex + 1, endingURLIndex - 1)
             audioURL = URL
+        }
+
+        function getCoverImage() {
+            const beginning = item.content.slice(0, 200)
+            const beginningURLPlace = beginning.search("src=")
+            const endingURLPlace = beginning.search("class")
+            const imageURL = beginning.slice(beginningURLPlace + 5, endingURLPlace - 2)
+            coverImageURL = imageURL
         }
 
         return (
@@ -82,10 +112,14 @@ const RSSReader = ({ rssFeed }) => {
                             <Text style={ tailwind(`italic py-1 text-xs`) }>Written By: { author }</Text>
                         </View>
                         <View style={ tailwind(`w-3/5 ml-3`) }>
-                            <Image 
-                                source={{ uri: 'https://i.imgur.com/15cUHCo.jpg' }}
-                                style={ tailwind(`h-48 w-48 rounded-lg`) }
-                            />
+                            { coverImageURL ? 
+                                <Image 
+                                    source={{ uri: coverImageURL }}
+                                    style={ tailwind(`h-48 w-48 rounded-lg`) }
+                                />
+                                :
+                                null
+                            }
                         </View>
                     </View>
                     <View style={[ tailwind(`bg-white rounded-lg p-5`), styles.shadow ]}>
@@ -97,7 +131,7 @@ const RSSReader = ({ rssFeed }) => {
                             tailwind(`w-20 border h-8 bg-green-900 justify-center items-center rounded-lg mt-5`),
                             styles.shadow
                             ]}
-                            onPress={ () => navigation.navigate('ReadPost', { postInfo: item, audioURL: audioURL }) }
+                            onPress={ () => navigation.navigate('ReadPost', { postInfo: postContent, audioURL: audioURL, image: coverImageURL }) }
                         >
                             <Text style={ tailwind(`text-white`) }>Read More</Text>
                         </Pressable>

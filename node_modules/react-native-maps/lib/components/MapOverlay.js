@@ -20,8 +20,6 @@ const propTypes = {
   image: PropTypes.any.isRequired,
   // Top left and bottom right coordinates for the overlay
   bounds: PropTypes.arrayOf(PropTypes.array.isRequired).isRequired,
-  // The bearing in degrees clockwise from north.
-  bearing: PropTypes.number,
   /* Boolean to allow an overlay to be tappable and use the
    * onPress function
    */
