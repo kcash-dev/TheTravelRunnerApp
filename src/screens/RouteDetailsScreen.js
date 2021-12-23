@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView, Image, Pressable, Linking } from 'react-native'
 import Maps from '../components/Maps';
 import tailwind from 'tailwind-rn';
@@ -8,23 +8,50 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 //Components
 import OwnStatusBar from '../components/StatusBar';
 
-function useForceUpdate(){
+function useForceUpdate(data){
     const [value, setValue] = useState(0); // integer state
     return () => setValue(value => value + 1); // update the state to force render
 }
 
 const RouteDetailsScreen = ({ route }) => {
     const { data } = route.params;
+    const [ jsonData, setJsonData ] = useState()
+
+    function checkJson(json) {
+        const newJson = []
+        json.forEach(item => {
+            if(item.length === 3) {
+                const newItem = item.splice(0, 1)
+                newJson.push({
+                    latitude: newItem[1],
+                    longitude: newItem[0]
+                })
+            } else if (item.length === 2) {
+                newJson.push({
+                    latitude: item[1],
+                    longitude: item[0]
+                })
+            }
+        })
+        setJsonData(newJson)
+    }
+
+    console.log(data.jsonData[0].features[0].geometry.coordinates[0], 'TO BE JSON')
+    useEffect(() => {
+        checkJson(data.jsonData[0].features[0].geometry.coordinates[0])
+    }, [])
 
     const forceUpdate = useForceUpdate();
-
-    console.log(data)
 
     return (
         <View style={ tailwind(`flex-1 bg-white`) }>
             <OwnStatusBar backgroundColor="#003b36" />
             <View style={ tailwind(`h-1/2`) }>
-                <Maps origin={ data.origin } update={ forceUpdate } json={ data.jsonData } />
+                { jsonData ?
+                    <Maps origin={ data.origin } update={ forceUpdate } json={ jsonData } data={ data }/>
+                    :
+                    null
+                }
             </View>
             <View style={ tailwind(`h-1/2`) }>
                 <View style={ tailwind(`w-full h-20 border-b justify-center`) }>
