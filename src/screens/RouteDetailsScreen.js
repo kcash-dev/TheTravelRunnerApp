@@ -4,6 +4,7 @@ import Maps from '../components/Maps';
 import tailwind from 'tailwind-rn';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { setDoc, doc } from 'firebase/firestore'
 
 //Components
 import OwnStatusBar from '../components/StatusBar';
@@ -19,20 +20,20 @@ const RouteDetailsScreen = ({ route }) => {
 
     function checkJson(json) {
         const newJson = []
-        json.forEach(item => {
-            if(item.length === 3) {
-                const newItem = item.slice(0, 2)
+        for (let i = 0; i < json.length; i++) {
+            if (json[i].length === 3) {
+                const newItem = json[i].slice(0, 2)
                 newJson.push({
                     latitude: newItem[1],
                     longitude: newItem[0]
                 })
-            } else if (item.length === 2) {
+            } else if (json[i].length === 2) {
                 newJson.push({
-                    latitude: item[1],
-                    longitude: item[0]
+                    latitude: json[i][1],
+                    longitude: json[i][0]
                 })
             }
-        })
+        }
         setJsonData(newJson)
     }
 
