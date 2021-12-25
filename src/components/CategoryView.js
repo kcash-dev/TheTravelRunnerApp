@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 import tailwind from 'tailwind-rn'
+import { useNavigation } from '@react-navigation/native'
 
-const CategoryView = ({ category, subCategory }) => {
+const CategoryView = ({ category, subCategory, data }) => {
     const [ color, setColor ] = useState('')
     const [ subColor, setSubColor ] = useState('')
     const [ categoryName, setCategoryName ] = useState(category[0].name.toLowerCase())
@@ -34,14 +35,40 @@ const CategoryView = ({ category, subCategory }) => {
         changeSubCategoryColor(subCategoryName)
     }, [ category ])
 
+    const navigation = useNavigation();
+
+    console.log(data)
+
     return (
-        <View style={ tailwind(`flex-row items-center absolute left-3 top-2`) }>
-            <View style={[ tailwind(`w-16 h-12 items-center justify-center rounded-lg ${color} opacity-80 mr-3`), styles.shadow ]}>
-                <Text style={ tailwind(`text-white font-bold text-center`) }>{ categoryName }</Text>
-            </View>
-            <View style={[ tailwind(`w-16 h-12 items-center justify-center rounded-lg ${subColor} opacity-80`), styles.shadow ]}>
-                <Text style={ tailwind(`text-white font-bold text-center`) }>{ subCategoryName }</Text>
-            </View>
+        <View style={[ tailwind(`flex-row items-center`), { zIndex: 1 } ]}>
+            <Pressable 
+                style={({ pressed }) => [
+                        { opacity: pressed ? 0.5 : 1 }, 
+                        tailwind(`items-center justify-center rounded-lg ${color} mr-3`), 
+                        styles.shadow 
+                ]}
+                onPress={() => navigation.navigate('CategoryReader', { categoryName: categoryName, data: data }) }
+            >
+                <Text 
+                    style={ tailwind(`p-4 text-white font-bold text-center`) }
+                >
+                    { categoryName }
+                </Text>
+            </Pressable>
+            <Pressable 
+                style={({ pressed }) => [
+                    { opacity: pressed ? 0.5 : .8 }, 
+                    tailwind(`items-center justify-center rounded-lg ${subColor}`), 
+                    styles.shadow 
+                ]}
+                onPress={() => navigation.navigate('CategoryReader', { categoryName: subCategoryName, data: data }) }
+            >
+                <Text 
+                    style={ tailwind(`p-4 text-white font-bold text-center`) }
+                >
+                    { subCategoryName }
+                </Text>
+            </Pressable>
         </View>
     )
 }

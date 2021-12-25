@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Screens
 import HomeScreen from '../screens/HomeScreen';
 import ReadPostScreen from '../screens/ReadPostScreen';
+import CategoryReaderScreen from '../screens/CategoryReaderScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ const HomeNav = () => {
         >
             <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="ReadPost" component={ReadPostScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="CategoryReader" component={CategoryReaderScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       );
 }

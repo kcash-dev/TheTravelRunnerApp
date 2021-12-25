@@ -3,18 +3,15 @@ import { FlatList, StyleSheet, Text, View, Pressable, Image, Animated, ImageBack
 import tailwind from 'tailwind-rn'
 import { useNavigation } from '@react-navigation/native'
 
-//Components
-import CategoryView from './CategoryView'
-
-const RSSReader = ({ rssFeed }) => {
+const CategoryReader = ({ categoryRssFeed }) => {
     const [ rssData, setRssData ] = useState()
     const [ state, setState ] = useState({
         scrollY: new Animated.Value(0)
     })
     
     function setData() {
-        if(rssFeed) {
-            setRssData(rssFeed.items)
+        if(categoryRssFeed) {
+            setRssData(categoryRssFeed.items)
         }
     }
 
@@ -22,7 +19,7 @@ const RSSReader = ({ rssFeed }) => {
     
     useEffect(() => {
         setData()
-    }, [ rssFeed ])
+    }, [ categoryRssFeed ])
 
     const renderFeed = ({ item }) => {
         const title = item.title;
@@ -99,7 +96,7 @@ const RSSReader = ({ rssFeed }) => {
                 style={ tailwind(`w-full justify-center border`) }
             >
                 <View style={ tailwind(`px-4 py-14`) }>
-                    <View style={ tailwind(`flex-row my-3`) }>
+                    <View style={ tailwind(`flex-row mb-3`) }>
                         <View style={ tailwind(`w-2/5`) }>
                             <Text style={ tailwind(`italic text-xs`) }>{ publishDate }</Text>
                             <Text style={ tailwind(`font-bold text-xl`) }>{ title }</Text>
@@ -115,13 +112,6 @@ const RSSReader = ({ rssFeed }) => {
                                 null
                             }
                         </View>
-                    </View>
-                    <View style={ tailwind(`absolute left-3 top-2`) }>
-                        <CategoryView 
-                            category={ primaryCategory } 
-                            subCategory={ secondaryCategory }
-                            data={ rssData }
-                        />
                     </View>
                     <View style={[ tailwind(`bg-white rounded-lg p-5`), styles.shadow ]}>
                         <Text>{ description }</Text>
@@ -220,7 +210,7 @@ const RSSReader = ({ rssFeed }) => {
     )
 }
 
-export default RSSReader
+export default CategoryReader
 
 const styles = StyleSheet.create({
     shadow: {

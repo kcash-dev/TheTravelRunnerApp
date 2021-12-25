@@ -38181,14 +38181,12 @@ async function sendData() {
     const data = DATA.countries[0]
     try {
         const setData = await setDoc(doc(db, 'routes', 'countries'), data)
-        console.log(setData)
     } catch (error) {
         console.error(error)
     }
 }
 
 const RoutesListScreen = () => {
-    console.log(typeof DATA.countries)
     useEffect(() => {
         sendData()
     }, [])

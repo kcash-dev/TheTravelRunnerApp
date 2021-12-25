@@ -77,8 +77,6 @@ const ReadPostScreen = ({ route }) => {
         extrapolate: 'clamp'
     })
 
-    console.log(content.html)
-
     return (
         <View style={ tailwind(`flex-1`) }>
             <Animated.View style={[ tailwind(`rounded-lg`), { height: headerHeight, width: width }, styles.shadow ]}>
