@@ -1,5 +1,5 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 
 //Components
 import Header from '../components/Header';
@@ -7,13 +7,19 @@ import CategoryReader from '../components/CategoryReader';
 
 const CategoryReaderScreen = ({ route }) => {
     const { categoryName, data } = route.params;
+    const [ filteredPosts, setFilteredPosts ] = useState()
 
-    console.log(data)
+    const filteredCategories = data.filter(item => {
+        return item.categories.find(obj => obj.name === categoryName)
+    })
+
+    useEffect(() => {
+        setFilteredPosts(filteredCategories)
+    }, [])
 
     return (
         <View>
-            <Header screenName={ categoryName }/>
-            <CategoryReader categoryRssFeed={ data } />
+            <CategoryReader categoryRssFeed={ filteredPosts } categoryName={ categoryName }/>
         </View>
     )
 }

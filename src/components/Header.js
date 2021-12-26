@@ -95,7 +95,7 @@ const Header = ({ data, routeName, screenName, subtitle, image, backButton }) =>
                                 </View>
                             </View>
                             <Animated.Text 
-                                style={[ tailwind(`absolute bottom-20 mb-2 text-4xl font-bold text-white text-opacity-90 italic`), { opacity: heroTitleOpacity} ]}>
+                                style={[ tailwind(`absolute bottom-20 mb-2 text-4xl font-bold text-white text-center text-opacity-90 italic`), { opacity: heroTitleOpacity} ]}>
                                     { screenName }
                             </Animated.Text>
                             { subtitle ? 

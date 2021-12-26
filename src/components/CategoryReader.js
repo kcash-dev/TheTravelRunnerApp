@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, View, Pressable, Image, Animated, ImageBack
 import tailwind from 'tailwind-rn'
 import { useNavigation } from '@react-navigation/native'
 
-const CategoryReader = ({ categoryRssFeed }) => {
+const CategoryReader = ({ categoryRssFeed, categoryName }) => {
     const [ rssData, setRssData ] = useState()
     const [ state, setState ] = useState({
         scrollY: new Animated.Value(0)
@@ -11,7 +11,7 @@ const CategoryReader = ({ categoryRssFeed }) => {
     
     function setData() {
         if(categoryRssFeed) {
-            setRssData(categoryRssFeed.items)
+            setRssData(categoryRssFeed)
         }
     }
 
@@ -168,16 +168,10 @@ const CategoryReader = ({ categoryRssFeed }) => {
                                 source={{ uri: 'https://i.imgur.com/smHitpL.png' }}
                             />
                             <View>
-                                <Animated.Text style={[ tailwind(`mt-5 px-10 text-center font-bold text-white text-opacity-100 italic text-2xl`), { opacity: headerTitleOpacity } ]}>The Travel Runner</Animated.Text>
-                                <Animated.Text style={[ tailwind(`text-center text-white text-opacity-90 text-xs`), { opacity: headerTitleOpacity} ]}>Where Travel and Trail Running Collide</Animated.Text>
+                                <Animated.Text style={[ tailwind(`mt-5 px-10 text-center font-bold text-white text-opacity-100 italic text-2xl`), { opacity: headerTitleOpacity } ]}>{ categoryName }</Animated.Text>
                             </View>
                         </View>
-                        <Animated.Text style={[ tailwind(`absolute bottom-20 mb-2 text-4xl font-bold text-white text-opacity-90 italic`), { opacity: heroTitleOpacity} ]}>The Travel Runner</Animated.Text>
-                        <Animated.Text style={[ tailwind(`absolute bottom-16 px-2 text-center text-white text-opacity-90`), { opacity: heroTitleOpacity} ]}>Where Travel and Trail Running Collide</Animated.Text>
-                        <Animated.Image 
-                            style={[ tailwind(`absolute rounded-lg top-6 left-2 h-20 w-20`), { opacity: heroTitleOpacity} ]}
-                            source={{ uri: 'https://i.imgur.com/smHitpL.png' }}
-                        />
+                        <Animated.Text style={[ tailwind(`absolute bottom-20 mb-2 text-4xl font-bold text-white text-opacity-90 italic`), { opacity: heroTitleOpacity} ]}>{ categoryName }</Animated.Text>
                     </View>
                 </ImageBackground>
             </Animated.View>

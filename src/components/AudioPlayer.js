@@ -25,10 +25,10 @@ const AudioPlayer = ({ source }) => {
     })
     loadAudio();
 
-    return ()=>{
+    return () => {
       sound && sound.unloadAsync()
     }
-  }, [])
+  }, [ status ])
 
   const playAudio = async () => {
     try {

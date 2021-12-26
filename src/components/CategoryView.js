@@ -37,8 +37,6 @@ const CategoryView = ({ category, subCategory, data }) => {
 
     const navigation = useNavigation();
 
-    console.log(data)
-
     return (
         <View style={[ tailwind(`flex-row items-center`), { zIndex: 1 } ]}>
             <Pressable 
