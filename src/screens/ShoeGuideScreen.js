@@ -1,13 +1,19 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { WebView } from 'react-native-webview';
 
 //Components
-import Header from '../components/Header'
+import ShoeGuideHeader from '../components/ShoeGuideHeader'
 
 const ShoeGuideScreen = () => {
+
+
     return (
-        <View>
-            <Header screenName="The Ultimate Trail Shoe Guide" image="https://i.imgur.com/yMP6WAK.jpg" />
+        <View style={{ flex: 1 }}> 
+            <WebView 
+                source={{ uri: 'https://www.thetravelrunner.com/ultimate-guide-to-best-trail-running-shoes/' }}
+            />
+            {/* <ShoeGuideHeader screenName="The Ultimate Trail Shoe Guide" image="https://i.imgur.com/yMP6WAK.jpg" /> */}
         </View>
     )
 }

@@ -9,7 +9,7 @@ const Selection = ({ name, icon, route }) => {
         <Pressable 
             style={({ pressed }) => [
                 { opacity: pressed ? 0.5 : 1 }, 
-                tailwind(`w-36 h-36 border rounded-lg items-center justify-center`), 
+                tailwind(`w-36 h-36 border rounded-lg items-center justify-center bg-white`), 
                 styles.shadow 
             ]}
             onPress={() => navigation.navigate(route)}

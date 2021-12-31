@@ -9,6 +9,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import HomeNav from './src/navs/HomeNav';
 import RoutesNav from './src/navs/RoutesNav';
 import ExtrasNav from './src/navs/ExtrasNav';
+import ShoppingNav from './src/navs/ShoppingNav';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +27,8 @@ export default function App() {
               iconName = 'map-signs'
             } else if (route.name === 'Extras') {
               iconName = 'user-plus'
+            } else if (route.name === 'Shopping') {
+              iconName = 'shopping-cart'
             }
 
             // You can return any component that you like here!
@@ -38,6 +41,7 @@ export default function App() {
         <Tab.Screen name="Home" component={ HomeNav } options={{ title: 'Blog Feed', headerShown: false }}/>
         <Tab.Screen name="Routes" component={ RoutesNav } options={{ title: 'Routes', headerShown: false }}/>
         <Tab.Screen name="Extras" component={ ExtrasNav } options={{ title: 'Extras', headerShown: false }}/>
+        <Tab.Screen name="Shopping" component={ ShoppingNav } options={{ title: 'Shopping', headerShown: false }}/>
       </Tab.Navigator>
     </NavigationContainer>
   );
