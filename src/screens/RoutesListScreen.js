@@ -38177,19 +38177,7 @@ const DATA = {
     ]
 }
 
-async function sendData() {
-    const data = DATA.countries[0]
-    try {
-        const setData = await setDoc(doc(db, 'routes', 'countries'), data)
-    } catch (error) {
-        console.error(error)
-    }
-}
-
 const RoutesListScreen = () => {
-    useEffect(() => {
-        sendData()
-    }, [])
     return (
         <View style={ tailwind(`flex-1`) }>
             <Header screenName={'Routes'} subtitle={ 'In need of a trail? I have something for you.' } image={ DATA.image } data={ DATA.countries } routeName={ 'CountryRoutes' }/>
