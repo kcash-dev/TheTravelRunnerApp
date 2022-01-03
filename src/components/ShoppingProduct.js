@@ -1,13 +1,29 @@
-import React from 'react'
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native'
+import React, { useRef, useEffect } from 'react'
+import { StyleSheet, Text, View, Pressable, Image, Animated } from 'react-native'
 import tailwind from 'tailwind-rn'
 import { useNavigation } from '@react-navigation/native'
 
 const ShoppingProduct = ({ item }) => {
     const product = item
     const navigation = useNavigation()
+
+    const translation = useRef(new Animated.Value(500)).current;
+
+    useEffect(() => {
+        Animated.timing(translation, {
+            toValue: 0,
+            duration: 700,
+            useNativeDriver: true,
+        }).start()
+    }, [])
+
     return (
-        <View style={ tailwind(`my-2`) }>
+        <Animated.View 
+            style={[ 
+                tailwind(`my-2`),
+                { transform: [{ translateY: translation }] }
+            ]}
+        >
             <Pressable
                 style={({ pressed }) => [
                     { opacity: pressed ? 0.5 : 1 },
@@ -23,7 +39,7 @@ const ShoppingProduct = ({ item }) => {
                 <Text style={ tailwind(`text-lg font-bold`) }>{ product.name }</Text>
                 <Text>{ product.description }</Text>
             </Pressable>
-        </View>
+        </Animated.View>
     )
 }
 

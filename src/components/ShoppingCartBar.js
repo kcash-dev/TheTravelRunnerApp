@@ -6,11 +6,11 @@ const ShoppingCartBar = () => {
     return (
         <Pressable 
             style={({ pressed }) => [
-                { opacity: pressed ? 0.5 : 1 },
+                { opacity: pressed ? 0.7 : 1 },
                 tailwind(`w-full bg-green-900 h-12 absolute bottom-0 justify-center`)
             ]}
         >
-            <Text style={ tailwind(`text-white text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
+            <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
         </Pressable>
     )
 }

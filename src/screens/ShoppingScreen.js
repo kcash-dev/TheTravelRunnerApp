@@ -4,6 +4,7 @@ import tailwind from 'tailwind-rn';
 
 //Components
 import ShoppingProduct from '../components/ShoppingProduct';
+import ShoppingCartBar from '../components/ShoppingCartBar'
 
 const PRODUCTS = [
     {
@@ -40,6 +41,7 @@ const ShoppingScreen = () => {
                 contentContainerStyle={ tailwind(`py-8 mx-8`) }
                 showsVerticalScrollIndicator='false'
             />
+            <ShoppingCartBar />
         </SafeAreaView>
     )
 }

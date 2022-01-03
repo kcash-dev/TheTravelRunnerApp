@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { FlatList, StyleSheet, Text, View, Pressable, Image, Animated, ImageBackground, useWindowDimensions } from 'react-native'
 import tailwind from 'tailwind-rn'
 import { useNavigation } from '@react-navigation/native'
@@ -8,9 +8,20 @@ import CategoryView from './CategoryView'
 
 const RSSReader = ({ rssFeed }) => {
     const [ rssData, setRssData ] = useState()
-    const [ state, setState ] = useState({
-        scrollY: new Animated.Value(0)
-    })
+
+    const scroll = useRef(
+        new Animated.Value(0)
+    ).current;
+
+    const translation = useRef(new Animated.Value(500)).current;
+
+    useEffect(() => {
+        Animated.timing(translation, {
+            toValue: 0,
+            duration: 700,
+            useNativeDriver: true,
+        }).start()
+    }, [])
     
     function setData() {
         if(rssFeed) {
@@ -145,19 +156,19 @@ const RSSReader = ({ rssFeed }) => {
     const { width } = useWindowDimensions();
     const HEADER_EXPANDED_HEIGHT = 250
     const HEADER_COLLAPSED_HEIGHT = 120
-    const headerTitleOpacity = state.scrollY.interpolate({
+    const headerTitleOpacity = scroll.interpolate({
         inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
         outputRange: [0, 1],
         extrapolate: 'clamp'
     })
 
-    const heroTitleOpacity = state.scrollY.interpolate({
+    const heroTitleOpacity = scroll.interpolate({
         inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
         outputRange: [1, 0],
         extrapolate: 'clamp'
     })
 
-    const headerHeight = state.scrollY.interpolate({
+    const headerHeight = scroll.interpolate({
         inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
         outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
         extrapolate: 'clamp'
@@ -191,31 +202,35 @@ const RSSReader = ({ rssFeed }) => {
                     </View>
                 </ImageBackground>
             </Animated.View>
-           { rssData ?
-                <FlatList 
-                    data={ rssData }
-                    renderItem={renderFeed}
-                    keyExtractor={item => item.title}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: {
-                             contentOffset: {
-                               y: state.scrollY
-                             }
-                           }
-                        }],
-                        { useNativeDriver: false }
-                    )}
-                    scrollEventThrottle={16}
-                />
-                :
-                <View style={ tailwind(`h-full items-center justify-center self-center`) }>
-                    <Image 
-                        source={{ uri: 'https://i.imgur.com/1dDg289.png' }}
-                        style={ tailwind(`h-16 w-16`) }
+            <Animated.View
+                style={{ transform: [{ translateY: translation }] }}
+            >
+                { rssData ?
+                    <FlatList 
+                        data={ rssData }
+                        renderItem={renderFeed}
+                        keyExtractor={item => item.title}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: {
+                                contentOffset: {
+                                y: scroll
+                                }
+                            }
+                            }],
+                            { useNativeDriver: false }
+                        )}
+                        scrollEventThrottle={16}
                     />
-                    <Text>Loading...</Text>
-                </View>
-            }
+                    :
+                    <View style={ tailwind(`h-full items-center justify-center self-center`) }>
+                        <Image 
+                            source={{ uri: 'https://i.imgur.com/1dDg289.png' }}
+                            style={ tailwind(`h-16 w-16`) }
+                        />
+                        <Text>Loading...</Text>
+                    </View>
+                }
+            </Animated.View>
         </View>
     )
 }
