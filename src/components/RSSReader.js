@@ -105,6 +105,8 @@ const RSSReader = ({ rssFeed }) => {
             coverImageURL = imageURL
         }
 
+        console.log(item)
+
         return (
             <View 
                 style={ tailwind(`w-full justify-center border`) }
@@ -213,7 +215,7 @@ const RSSReader = ({ rssFeed }) => {
                         onScroll={Animated.event(
                             [{ nativeEvent: {
                                 contentOffset: {
-                                y: scroll
+                                    y: scroll
                                 }
                             }
                             }],

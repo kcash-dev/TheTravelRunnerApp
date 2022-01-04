@@ -1,10 +1,9 @@
-import React from 'react'
-import { StyleSheet, Text, View, FlatList, SafeAreaView } from 'react-native'
+import React, { useRef, useState } from 'react'
+import { Dimensions, StyleSheet, Text, View, FlatList, SafeAreaView, Animated, Pressable } from 'react-native'
 import tailwind from 'tailwind-rn';
 
 //Components
 import ShoppingProduct from '../components/ShoppingProduct';
-import ShoppingCartBar from '../components/ShoppingCartBar'
 
 const PRODUCTS = [
     {
@@ -31,6 +30,32 @@ const PRODUCTS = [
 ];
 
 const ShoppingScreen = () => {
+    const [ isShowing, setIsShowing ] = useState(false)
+    const animation = useRef(
+        new Animated.Value(650)
+    ).current;
+
+    const showShoppingScreen = () => {
+        setIsShowing(true)
+        Animated.timing(animation, {
+            toValue: 30,
+            duration: 700,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const hideShoppingScreen = () => {
+        setIsShowing(false)
+        Animated.timing(animation, {
+            toValue: 650,
+            duration: 700,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
+    
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <FlatList 
@@ -41,7 +66,32 @@ const ShoppingScreen = () => {
                 contentContainerStyle={ tailwind(`py-8 mx-8`) }
                 showsVerticalScrollIndicator='false'
             />
-            <ShoppingCartBar />
+            <Pressable 
+                style={({ pressed }) => [
+                    { opacity: pressed ? 0.7 : 1 },
+                    tailwind(`w-full bg-green-900 h-12 absolute bottom-0 justify-center`)
+                ]}
+                onPress={ () => showShoppingScreen() }
+            >
+                <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
+            </Pressable>
+            <Animated.View
+                style={[ 
+                    tailwind(`absolute bg-white justify-center items-center`), 
+                    { height: windowHeight, width: windowWidth, zIndex: 1, transform: [{ translateY: animation }] } 
+                ]}
+            >
+                <Pressable 
+                    style={({ pressed }) => [
+                        { opacity: pressed ? 0.7 : 1 },
+                        tailwind(`w-full bg-green-900 h-12 absolute top-0 justify-center`)
+                    ]}
+                    onPress={ () => hideShoppingScreen() }
+                >
+                    <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
+                </Pressable>
+                <Text>There's nothing here</Text>
+            </Animated.View>
         </SafeAreaView>
     )
 }
