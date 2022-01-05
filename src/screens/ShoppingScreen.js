@@ -1,9 +1,11 @@
 import React, { useRef, useState } from 'react'
 import { Dimensions, StyleSheet, Text, View, FlatList, SafeAreaView, Animated, Pressable } from 'react-native'
 import tailwind from 'tailwind-rn';
+import { useSelector } from 'react-redux' 
 
 //Components
 import ShoppingProduct from '../components/ShoppingProduct';
+import CartProduct from '../components/CartProduct';
 
 const PRODUCTS = [
     {
@@ -30,10 +32,11 @@ const PRODUCTS = [
 ];
 
 const ShoppingScreen = () => {
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
     const [ isShowing, setIsShowing ] = useState(false)
-    const animation = useRef(
-        new Animated.Value(650)
-    ).current;
+    const animation = useRef(new Animated.Value(650)).current;
+    const cart = useSelector(state => state.cart)
 
     const showShoppingScreen = () => {
         setIsShowing(true)
@@ -53,8 +56,6 @@ const ShoppingScreen = () => {
         }).start()
     }
 
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
     
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -90,7 +91,16 @@ const ShoppingScreen = () => {
                 >
                     <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
                 </Pressable>
-                <Text>There's nothing here</Text>
+                { cart.length > 0 ?
+                    <FlatList 
+                        data={ cart }
+                        renderItem={({item}) => (
+                            <CartProduct item={ item } />
+                        )}
+                    />
+                    :
+                    <Text>There's nothing here</Text>
+                }
             </Animated.View>
         </SafeAreaView>
     )
