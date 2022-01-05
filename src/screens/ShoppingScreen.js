@@ -38,8 +38,8 @@ const ShoppingScreen = () => {
     const showShoppingScreen = () => {
         setIsShowing(true)
         Animated.timing(animation, {
-            toValue: 30,
-            duration: 700,
+            toValue: 20,
+            duration: 600,
             useNativeDriver: true
         }).start()
     }
@@ -48,7 +48,7 @@ const ShoppingScreen = () => {
         setIsShowing(false)
         Animated.timing(animation, {
             toValue: 650,
-            duration: 700,
+            duration: 600,
             useNativeDriver: true
         }).start()
     }
