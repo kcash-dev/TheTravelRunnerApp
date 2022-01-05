@@ -17,8 +17,6 @@ const Header = ({ data, routeName, screenName, subtitle, image, backButton }) =>
     const [ content, setContent ] = useState(ShoeGuideHTML)
     const nodeList = [ 'audio', 'meta' ]
 
-    console.log(ShoeGuideHTML, "CONTENT")
-
     const navigation = useNavigation();
 
     const { width } = useWindowDimensions();

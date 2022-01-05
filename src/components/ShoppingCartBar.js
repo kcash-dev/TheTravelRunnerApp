@@ -1,7 +1,10 @@
 import React, { useState, useRef } from 'react'
-import { StyleSheet, Text, View, Pressable, Animated, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Animated, Dimensions, FlatList } from 'react-native'
 import tailwind from 'tailwind-rn';
 import { useSelector } from 'react-redux' 
+
+//Components
+import CartProduct from './CartProduct';
 
 const ShoppingCartBar = () => {
     const windowWidth = Dimensions.get('window').width;
@@ -30,6 +33,7 @@ const ShoppingCartBar = () => {
 
     return (
         <View style={{ flex: 1 }}>
+            { !isShowing ? 
             <Pressable 
                 style={({ pressed }) => [
                     { opacity: pressed ? 0.7 : 1 },
@@ -39,27 +43,31 @@ const ShoppingCartBar = () => {
             >
                 <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
             </Pressable>
+            :
+            null
+            }
             <Animated.View
                 style={[ 
                     tailwind(`absolute bg-white justify-center items-center`), 
                     { height: windowHeight, width: windowWidth, zIndex: 1, transform: [{ translateY: animation }] } 
                 ]}
             >
-                <Pressable 
+                {/* <Pressable 
                     style={({ pressed }) => [
                         { opacity: pressed ? 0.7 : 1 },
-                        tailwind(`w-full bg-green-900 h-12 absolute top-0 justify-center`)
+                        tailwind(`w-full bg-green-900 h-12 justify-center`)
                     ]}
                     onPress={ () => hideShoppingScreen() }
                 >
                     <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
-                </Pressable>
+                </Pressable> */}
                 { cart.length > 0 ?
                     <FlatList 
                         data={ cart }
                         renderItem={({item}) => (
-                            <CartProduct item={ item } />
+                            <CartProduct item={ item.item } />
                         )}
+                        keyExtractor={(item) => item.item.name }
                     />
                     :
                     <Text>There's nothing here</Text>

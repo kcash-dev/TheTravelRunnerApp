@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
 import tailwind from 'tailwind-rn';
+import { useDispatch, useSelector } from 'react-redux'
+import { addItem } from '../store/taskAction';
 
 //Components
 import ShoppingCartBar from '../components/ShoppingCartBar';
@@ -9,7 +11,9 @@ const ProductInfoScreen = ({ route }) => {
     const { item } = route.params;
     const [ isItemInCart, setIsItemInCart ] = useState(true)
 
-    console.log(item)
+    const dispatch = useDispatch()
+    const addItemToCart = (item) => dispatch(addItem(item))
+
     return (
         <View
             style={ tailwind(`justify-center items-center bg-white flex-1`) }
@@ -26,6 +30,7 @@ const ProductInfoScreen = ({ route }) => {
                         tailwind(`px-12 py-4 bg-green-900 rounded-lg mt-10`),
                         styles.shadow
                     ]}
+                    onPress={() => addItemToCart(item)}
                 >
                     <Text style={ tailwind(`text-white font-bold text-center`) }>Add to Cart</Text>
                 </Pressable>

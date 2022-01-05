@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Dimensions, StyleSheet, Text, View, FlatList, SafeAreaView, Animated, Pressable } from 'react-native'
 import tailwind from 'tailwind-rn';
 import { useSelector } from 'react-redux' 
@@ -35,8 +35,11 @@ const ShoppingScreen = () => {
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
     const [ isShowing, setIsShowing ] = useState(false)
+    const [ cartTotal, setCartTotal ] = useState(0)
     const animation = useRef(new Animated.Value(650)).current;
     const cart = useSelector(state => state.cart)
+
+    console.log(cart, "CART")
 
     const showShoppingScreen = () => {
         setIsShowing(true)
@@ -56,9 +59,23 @@ const ShoppingScreen = () => {
         }).start()
     }
 
+    const getCartTotal = () => {
+        let total = 0
+        for (let i = 0; i < cart.length; i++) {
+            total = total + cart[i].item.price
+        }
+        setCartTotal(total)
+    }
+
+    useEffect(() => {
+        getCartTotal()
+    }, [ cart ])
+
+    console.log(cartTotal)
     
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Text style={ tailwind(`my-2 font-bold text-2xl text-center`) }>Shopping</Text>
             <FlatList 
                 data={ PRODUCTS }
                 renderItem={({item}) => (
@@ -70,36 +87,49 @@ const ShoppingScreen = () => {
             <Pressable 
                 style={({ pressed }) => [
                     { opacity: pressed ? 0.7 : 1 },
-                    tailwind(`w-full bg-green-900 h-12 absolute bottom-0 justify-center`)
+                    tailwind(`w-full bg-green-900 h-12 absolute bottom-0 justify-center rounded-t-md`)
                 ]}
                 onPress={ () => showShoppingScreen() }
             >
-                <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
+                <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $ { cartTotal }</Text>
+                <View style={ tailwind(`h-7 w-7 bg-white rounded-full justify-center items-center absolute right-2`) }>
+                    <Text style={ tailwind(`font-bold text-lg`) }>{ cart.length }</Text>
+                </View>
             </Pressable>
             <Animated.View
                 style={[ 
-                    tailwind(`absolute bg-white justify-center items-center`), 
+                    tailwind(`absolute bg-white items-center`), 
                     { height: windowHeight, width: windowWidth, zIndex: 1, transform: [{ translateY: animation }] } 
                 ]}
             >
                 <Pressable 
                     style={({ pressed }) => [
                         { opacity: pressed ? 0.7 : 1 },
-                        tailwind(`w-full bg-green-900 h-12 absolute top-0 justify-center`)
+                        tailwind(`w-full bg-green-900 h-12 justify-center rounded-b-md`)
                     ]}
                     onPress={ () => hideShoppingScreen() }
                 >
-                    <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart Total: $0.00</Text>
+                    <Text style={ tailwind(`text-white text-opacity-100 text-center font-bold`) }>Shopping Cart</Text>
+                    <View style={ tailwind(`h-7 w-7 bg-white rounded-full justify-center items-center absolute right-2`) }>
+                        <Text style={ tailwind(`font-bold text-lg`) }>{ cart.length }</Text>
+                    </View>
                 </Pressable>
                 { cart.length > 0 ?
-                    <FlatList 
-                        data={ cart }
-                        renderItem={({item}) => (
-                            <CartProduct item={ item } />
-                        )}
-                    />
+                    <View>
+                        <FlatList 
+                            data={ cart }
+                            contentContainerStyle={ tailwind(`mt-2 bg-white`) }
+                            renderItem={({item}) => (
+                                <CartProduct item={ item.item } />
+                            )}
+                            keyExtractor={(item) => item.item.name}
+                        />
+                        <View>
+                            
+                        </View>
+                    </View>
                     :
-                    <Text>There's nothing here</Text>
+                    <Text style={ tailwind(`text-center`) }>There's nothing here</Text>
                 }
             </Animated.View>
         </SafeAreaView>

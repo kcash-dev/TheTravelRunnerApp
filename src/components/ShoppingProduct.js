@@ -32,6 +32,7 @@ const ShoppingProduct = ({ item }) => {
                 ]}
                 onPress={() => navigation.navigate('ProductInfoScreen', { item: item })}
             >
+                <Text style={ tailwind(`absolute top-2 left-2 font-bold text-xl`) } >${ product.price }</Text>
                 <Image 
                     source={{ uri: product.image }}
                     style={ tailwind(`h-24 w-24`) }
